@@ -72,4 +72,5 @@ translate_model = ChatGPTAPI(
     language=LANGUAGES.get("zh-hant"))
 
 
-process_pptx_text(os.getenv("FILE_BASENAME"))
+for fileBasename in os.getenv("FILE_BASENAME").split(","):
+    process_pptx_text(fileBasename)
