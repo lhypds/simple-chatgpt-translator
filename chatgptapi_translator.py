@@ -66,6 +66,8 @@ class ChatGPTAPI(ABC):
             t_text = t_text.split(">")[1]
         if ":" not in text and ":" in t_text:
             t_text = t_text.split(":")[1]
+        if "-" not in text and "-" in t_text:
+            t_text = t_text.split("-")[1]
         t_text = t_text.strip()
         
         print("Trasnation: " + t_text)
