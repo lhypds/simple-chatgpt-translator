@@ -15,13 +15,14 @@ def get_paragraph_text(paragraph):
 
 def translate_text(text):
     """Translate the text"""
+    
+    # Ignore some text
     if text.strip() == "ARiGATAYA": return text
     if text.strip() == "ARiGATAYA Entab": return text
     if len(text.strip()) == 1: return text  # Skip single characters
     
     print("GPT translating text...")
     result = translate_model.translate(text)
-    print("-")
     return result
 
 
@@ -34,9 +35,18 @@ def replace_text(paragraph):
     print("Paragraph text: " + paragraph_text)
     
     # Process the text
+    translate =  translate_text(paragraph_text)
+    
+    if translate.strip() == paragraph_text.strip(): 
+        print("Skipping translation")
+        print("-")
+        return
+    print("-")
+    
+    # Replace the text
     for i, run in enumerate(paragraph.runs):
         if i == 0:
-            run.text = translate_text(paragraph_text)
+            run.text = translate
         else:
             run.text = ""
 

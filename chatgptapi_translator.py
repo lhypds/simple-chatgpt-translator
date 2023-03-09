@@ -16,7 +16,6 @@ class ChatGPTAPI(ABC):
 
 
     def translate(self, text):
-        print("Original: " + text)
         self.rotate_key()
         try:
             completion = openai.ChatCompletion.create(
