@@ -1,4 +1,5 @@
 import os
+import os.path
 from dotenv import load_dotenv
 from pptx import Presentation
 import re
@@ -12,7 +13,7 @@ def get_paragraph_text(paragraph):
     return text
 
 
-def replace_text(paragraph, source_str, target_str):
+def process_text(paragraph, source_str, target_str):
     """Replace the text of a paragraph object"""
     if paragraph.text.strip() == "": 
         #print("Paragraph empty") 
@@ -31,7 +32,12 @@ def replace_text(paragraph, source_str, target_str):
         #print("Source string not found")
         return
     
+    # Found text
     print("★ Paragraph text: " + paragraph_text)
+    if source_str == target_str:
+        #print("Source string and target string are the same")
+        return
+    
     result_text = paragraph_text.replace(source_str, target_str)
     print("★ Replace to text: " + result_text)
     
@@ -44,30 +50,42 @@ def replace_text(paragraph, source_str, target_str):
     print("-")
     
 
-def replace_pptx_text(fileBasename, source_str, target_str):
+def process_pptx_text(fileBasename, source_str, target_str):
     """Process the text in a pptx file"""
-    prs = Presentation(fileBasename + '_translated.pptx')
+    prs = Presentation(fileBasename + ".pptx")
     
     for slide in prs.slides:
         for shape in slide.shapes:  # loop through shapes on slide
             if shape.has_text_frame:
                 for paragraph in shape.text_frame.paragraphs:
-                    replace_text(paragraph, source_str, target_str)
+                    process_text(paragraph, source_str, target_str)
             if shape.has_table:
                 for cell in shape.table.iter_cells():
                     for paragraph in cell.text_frame.paragraphs:
-                        replace_text(paragraph, source_str, target_str)
+                        process_text(paragraph, source_str, target_str)
                         
-    prs.save(fileBasename + '_translated.pptx')
-    
+    prs.save(fileBasename + ".pptx")
+
 
 def replace(source_str, target_str):
     print("=== Replace " + source_str + " with " + target_str + " ===")
     for fileBasename in os.getenv("FILE_BASENAME").split(","):
         print("Replacing for file: " + fileBasename + ".pptx")
         print("Start replacing...")
-        replace_pptx_text(fileBasename, source_str, target_str)
+        process_pptx_text(fileBasename, source_str, target_str)
         print("End.")
+        
+
+def search(target_str):
+    print("=== Search " + target_str + " ===")
+    for fileBasename in os.getenv("FILE_BASENAME").split(","):
+        print("Search for file: " + fileBasename + ".pptx")
+        if os.path.isfile(fileBasename + ".pptx"):
+            print("Start searching...")
+            process_pptx_text(fileBasename, target_str, target_str)
+            print("End.")
+        else:
+            print("File not found")
 
 
 #replace("姿勢", "姿態")
@@ -90,4 +108,6 @@ def replace(source_str, target_str):
 #replace("切口", "掘進面")
 #replace("儀器點", "機械點")
 #replace("儀器", "機械")
-replace("分段", "環片")
+#replace("分段", "環片")
+
+search("演算")
