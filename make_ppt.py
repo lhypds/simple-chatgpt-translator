@@ -19,7 +19,9 @@ def translate_text(text):
     if text.strip() == "ARiGATAYA Entab": return text
     
     print("GPT translating text...")
-    return translate_model.translate(text)
+    result = translate_model.translate(text)
+    print("-")
+    return result
 
 
 def replace_text(paragraph):
