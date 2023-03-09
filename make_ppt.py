@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from pptx import Presentation
 from chatgptapi_translator import ChatGPTAPI
 from utils import LANGUAGES, TO_LANGUAGE_CODE
@@ -33,9 +35,9 @@ def replace_text(paragraph):
             run.text = ""
 
 
-def process_pptx_text(filename):
+def process_pptx_text(fileBasename):
     """Process the text in a pptx file"""
-    prs = Presentation(filename)
+    prs = Presentation(fileBasename + '.pptx')
     for slide in prs.slides:
         for shape in slide.shapes:  # loop through shapes on slide
             if shape.has_text_frame:
@@ -45,17 +47,14 @@ def process_pptx_text(filename):
                 for cell in shape.table.iter_cells():
                     for paragraph in cell.text_frame.paragraphs:
                         replace_text(paragraph)
-    prs.save('test1.pptx')
+    prs.save(fileBasename + '_translated.pptx')
 
 
 # Create the translator
+apikey = os.getenv("CHATGPTAPI_KEY")
 translate_model = ChatGPTAPI(
-    key="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"
-      + ",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"
-      + ",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"
-      + ",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"
-      + ",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",
+    key=apikey,
     language=LANGUAGES.get("zh-hant"))
 
 
-process_pptx_text('test.pptx')
+process_pptx_text(os.getenv("FILE_BASENAME"))
