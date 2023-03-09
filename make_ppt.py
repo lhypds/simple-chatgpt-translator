@@ -67,9 +67,8 @@ def process_pptx_text(fileBasename):
 
 
 # Create the translator
-apikey = os.getenv("CHATGPTAPI_KEY")
 translate_model = ChatGPTAPI(
-    key=apikey,
+    key=os.getenv("CHATGPTAPI_KEY"),
     language=LANGUAGES.get("zh-hant"))
 
 

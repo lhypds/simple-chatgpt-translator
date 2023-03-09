@@ -10,10 +10,8 @@ class ChatGPTAPI(ABC):
         self.language = language
         self.key_len = len(key.split(","))
 
-
     def rotate_key(self):
         openai.api_key = next(self.keys)
-
 
     def translate(self, text):
         self.rotate_key()
@@ -40,6 +38,7 @@ class ChatGPTAPI(ABC):
             #sleep_time = int(60 / self.key_len)
             sleep_time = int(60)
             time.sleep(sleep_time)
+            
             print(e, f"will sleep {sleep_time} seconds")
             self.rotate_key()
             completion = openai.ChatCompletion.create(
@@ -61,10 +60,12 @@ class ChatGPTAPI(ABC):
         
         # trim the text
         t_text = t_text.strip()
-        if "→" in t_text:
+        if "→" not in text and "→" in t_text:
             t_text = t_text.split("→")[1]
-        if "->" in t_text:
+        if "->" not in text and "->" in t_text:
             t_text = t_text.split(">")[1]
+        if ":" not in text and ":" in t_text:
+            t_text = t_text.split(":")[1]
         t_text = t_text.strip()
         
         print("Trasnation: " + t_text)
