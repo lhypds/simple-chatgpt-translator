@@ -73,7 +73,7 @@ def replace(source_str, target_str):
         print("Replacing for file: " + fileBasename + ".pptx")
         print("Start replacing...")
         process_pptx_text(fileBasename, source_str, target_str)
-        print("End.")
+        print("End replace.")
         
 
 def search(target_str):
@@ -83,7 +83,7 @@ def search(target_str):
         if os.path.isfile(fileBasename + ".pptx"):
             print("Start searching...")
             process_pptx_text(fileBasename, target_str, target_str)
-            print("End.")
+            print("End search.")
         else:
             print("File not found")
 

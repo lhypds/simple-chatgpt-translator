@@ -100,8 +100,15 @@ translate_model = ChatGPTAPI(
     language=LANGUAGES.get("zh-hant"))
 
 
-for fileBasename in os.getenv("FILE_BASENAME").split(","):
-    print("=== Translate file: " + fileBasename + ".pptx ===")
-    print("Start translating...")
-    process_pptx_text(fileBasename)
-    print("End.")
+def translate():
+    for fileBasename in os.getenv("FILE_BASENAME").split(","):
+        print("=== Translate file: " + fileBasename + ".pptx ===")
+        if os.path.isfile(fileBasename + ".pptx"):
+            print("Start translating...")
+            process_pptx_text(fileBasename)
+            print("End translate.")
+        else:
+            print("File not found")
+
+
+translate()
