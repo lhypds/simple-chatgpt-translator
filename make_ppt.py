@@ -17,6 +17,7 @@ def translate_text(text):
     """Translate the text"""
     if text.strip() == "ARiGATAYA": return text
     if text.strip() == "ARiGATAYA Entab": return text
+    if len(text.strip()) == 1: return text  # Skip single characters
     
     print("GPT translating text...")
     return translate_model.translate(text)
