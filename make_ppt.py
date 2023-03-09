@@ -102,4 +102,6 @@ translate_model = ChatGPTAPI(
 
 for fileBasename in os.getenv("FILE_BASENAME").split(","):
     print("=== Translate file: " + fileBasename + ".pptx ===")
+    print("Start translating...")
     process_pptx_text(fileBasename)
+    print("End.")
