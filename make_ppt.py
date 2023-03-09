@@ -54,15 +54,33 @@ def replace_text(paragraph):
 def process_pptx_text(fileBasename):
     """Process the text in a pptx file"""
     prs = Presentation(fileBasename + '.pptx')
+    
+    paragraph_count = 0
     for slide in prs.slides:
         for shape in slide.shapes:  # loop through shapes on slide
             if shape.has_text_frame:
                 for paragraph in shape.text_frame.paragraphs:
-                    replace_text(paragraph)
+                    paragraph_count += 1
             if shape.has_table:
                 for cell in shape.table.iter_cells():
                     for paragraph in cell.text_frame.paragraphs:
+                        paragraph_count += 1
+    
+    process_count = 0
+    for slide in prs.slides:
+        for shape in slide.shapes:  # loop through shapes on slide
+            if shape.has_text_frame:
+                for paragraph in shape.text_frame.paragraphs:
+                    print(f"Processing paragraph {process_count} / {paragraph_count} for file {fileBasename}")
+                    replace_text(paragraph)
+                    process_count += 1
+            if shape.has_table:
+                for cell in shape.table.iter_cells():
+                    for paragraph in cell.text_frame.paragraphs:
+                        print(f"Processing paragraph {process_count} / {paragraph_count} for file {fileBasename}")
                         replace_text(paragraph)
+                        process_count += 1
+                        
     prs.save(fileBasename + '_translated.pptx')
 
 
@@ -73,4 +91,5 @@ translate_model = ChatGPTAPI(
 
 
 for fileBasename in os.getenv("FILE_BASENAME").split(","):
+    print("Translate file: " + fileBasename + ".pptx")
     process_pptx_text(fileBasename)
