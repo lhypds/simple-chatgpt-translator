@@ -13,6 +13,9 @@ def get_paragraph_text(paragraph):
 
 def translate_text(text):
     """Translate the text"""
+    if text.strip() == "ARiGATAYA": return text
+    if text.strip() == "ARiGATAYA Entab": return text
+    
     print("GPT translating text...")
     return translate_model.translate(text)
 

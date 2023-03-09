@@ -38,7 +38,8 @@ class ChatGPTAPI(ABC):
             )
         except Exception as e:
             # TIME LIMIT for open api please pay
-            sleep_time = int(60 / self.key_len)
+            #sleep_time = int(60 / self.key_len)
+            sleep_time = int(60)
             time.sleep(sleep_time)
             print(e, f"will sleep {sleep_time} seconds")
             self.rotate_key()
