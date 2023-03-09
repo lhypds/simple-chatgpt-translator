@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from pptx import Presentation
 from chatgptapi_translator import ChatGPTAPI
 from utils import LANGUAGES, TO_LANGUAGE_CODE
+import re
 
 
 def get_paragraph_text(paragraph):
@@ -13,7 +14,7 @@ def get_paragraph_text(paragraph):
     return text
 
 
-def translate_text(text):
+def translate(text):
     """Translate the text"""
     
     # Ignore some text
@@ -28,16 +29,25 @@ def translate_text(text):
 
 def replace_text(paragraph):
     """Replace the text of a paragraph object"""
-    if paragraph.text.strip() == "": return
-    if len(paragraph.runs) == 0: return
+    if paragraph.text.strip() == "": 
+        print("Paragraph empty") 
+        return
+    
+    if len(paragraph.runs) == 0: 
+        print("Paragraph has no runs")
+        return
+    
+    if re.findall(r'[\u4e00-\u9fff]+', paragraph.text) == [] and re.findall(r'[\u3040-\u30ff]+', paragraph.text) == []: 
+        print("Paragraph has no Chinese/Japanese characters")
+        return
     
     paragraph_text = get_paragraph_text(paragraph)
     print("Paragraph text: " + paragraph_text)
     
     # Process the text
-    translate =  translate_text(paragraph_text)
+    translated_text =  translate(paragraph_text)
     
-    if translate.strip() == paragraph_text.strip(): 
+    if translated_text.strip() == paragraph_text.strip(): 
         print("Skipping translation")
         print("-")
         return
@@ -46,7 +56,7 @@ def replace_text(paragraph):
     # Replace the text
     for i, run in enumerate(paragraph.runs):
         if i == 0:
-            run.text = translate
+            run.text = translated_text
         else:
             run.text = ""
 
@@ -71,13 +81,13 @@ def process_pptx_text(fileBasename):
         for shape in slide.shapes:  # loop through shapes on slide
             if shape.has_text_frame:
                 for paragraph in shape.text_frame.paragraphs:
-                    print(f"Processing paragraph {process_count} / {paragraph_count} for file {fileBasename}")
+                    print(f"★ Processing paragraph {process_count} / {paragraph_count} for file {fileBasename}")
                     replace_text(paragraph)
                     process_count += 1
             if shape.has_table:
                 for cell in shape.table.iter_cells():
                     for paragraph in cell.text_frame.paragraphs:
-                        print(f"Processing paragraph {process_count} / {paragraph_count} for file {fileBasename}")
+                        print(f"★ Processing paragraph {process_count} / {paragraph_count} for file {fileBasename}")
                         replace_text(paragraph)
                         process_count += 1
                         
@@ -91,5 +101,5 @@ translate_model = ChatGPTAPI(
 
 
 for fileBasename in os.getenv("FILE_BASENAME").split(","):
-    print("Translate file: " + fileBasename + ".pptx")
+    print("=== Translate file: " + fileBasename + ".pptx ===")
     process_pptx_text(fileBasename)
