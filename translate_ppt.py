@@ -14,7 +14,7 @@ def get_paragraph_text(paragraph):
     return text
 
 
-def translate(text):
+def gtp_translate(text):
     """Translate the text"""
     
     # Ignore some text
@@ -45,7 +45,7 @@ def replace_text(paragraph):
     print("Paragraph text: " + paragraph_text)
     
     # Process the text
-    translated_text =  translate(paragraph_text)
+    translated_text =  gtp_translate(paragraph_text)
     
     if translated_text.strip() == paragraph_text.strip(): 
         print("Skipping translation")
