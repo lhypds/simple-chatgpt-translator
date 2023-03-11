@@ -1,5 +1,5 @@
 
-Simple PPT Translator
+Simple ChatGPT Translator
 =====================
 
 
