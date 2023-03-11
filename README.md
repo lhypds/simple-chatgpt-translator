@@ -4,7 +4,7 @@ Simple ChatGPT Translator
 
 
 ChatGPT is really fun.  
-This simple PPT translator can translate file from any language to any language with ChatGPT.  
+This simple PPT translator can translate file (current only support PPTX) from any language to any language with ChatGPT.  
 And the accuracy is verified better than the Google Translate.  
 Bad thing is ChatGPT doesn't return result in a united format. Sometimes we need to manually format the result.  
 
